@@ -45,11 +45,14 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-
+//creating session object
+        Session session = sessionFactory.openSession();
+        //creating transaction object
+        Transaction t = session.beginTransaction();
         //App.insertData(0, "ravi");
         //App.getUserData();
         //    App.insertDepartmentData(2, "Adertisement","DADR");
-        // App.getDepartmentData();
+          App.getDepartmentData();
 
 
 
@@ -58,27 +61,29 @@ public class App {
         dept.setDeptName("Reaserch and Development");
         dept.setDeptCode("DRD");
 
-        Employee employee1 = new Employee("keshav", "pune", dept);
-        Employee employee2 = new Employee("ravi", "pune", dept);
-        Employee employee3 = new Employee("shiva", "pune", dept);
-
-        Set<Employee> employees=new HashSet<>();
-        employees.add(employee1);
-        employees.add(employee2);
-        employees.add(employee3);
-
-        dept.setEmployees(employees);
-
-        //creating session object
-        Session session = sessionFactory.openSession();
-        //creating transaction object
-        Transaction t = session.beginTransaction();
-
         //Save the Model object
         session.save(dept);
-        session.save(employee1);
-        session.save(employee2);
-        session.save(employee3);
+
+
+        Employee employee1 = new Employee("rajeshwar", "pune", dept);
+      //  Employee employee2 = new Employee("ravi", "pune", dept);
+     //   Employee employee3 = new Employee("shiva", "pune", dept);
+        dept.getEmployees().add(employee1);
+        //Set<Employee> employees=new HashSet<>();
+        //employees.add(employee1);
+    //    employees.add(employee2);
+     //   employees.add(employee3);
+session.save(employee1);
+
+
+
+
+
+
+
+        // session.save(employee1);
+       // session.save(employee2);
+       // session.save(employee3);
 
         //Commit transaction
         t.commit();
