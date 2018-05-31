@@ -1,9 +1,6 @@
 package com.kc.hib.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by keshav.chaure on 5/30/2018.
@@ -26,6 +23,7 @@ public class User implements java.io.Serializable {
 
     @Id
     @Column(name = "EmpID")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
         return id;
     }
