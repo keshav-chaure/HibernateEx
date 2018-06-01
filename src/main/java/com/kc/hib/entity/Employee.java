@@ -16,6 +16,10 @@ public class Employee implements Serializable{
     private String empCity;
     private Department dept;
 
+    public Employee() {
+        System.out.println("employee loading..");
+    }
+
     public Employee(String empName, String empCity, Department dept) {
         this.empName = empName;
         this.empCity = empCity;
@@ -51,7 +55,7 @@ public class Employee implements Serializable{
         this.empCity = empCity;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emp_dept")
     public Department getDept() {
         return dept;

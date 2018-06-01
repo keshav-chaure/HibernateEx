@@ -1,5 +1,9 @@
 package com.kc.hib.entity;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -18,12 +22,15 @@ public class Department implements Serializable {
     // @JoinTable(name = "Dept_Emp", joinColumns = { @JoinColumn(name = "dept_id") }, inverseJoinColumns = { @JoinColumn(name = "emp_id") })
     Set<Employee> employees = new HashSet<>(0);
 
+    public Department() {
+        System.out.println("dept loading..");
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // use autoincreament
     // @GeneratedValue(strategy = GenerationType.AUTO) // default genrater strategy it will genrate next value as per database dialect.
     // @GeneratedValue(strategy = GenerationType.SEQUENCE) org.hibernate.MappingExcepton : org.hibernate.dialect.MySQLDialect does not support sequence.
     // @GeneratedValue(strategy = GenerationType.TABLE)
-
     @Column(name = "dept_id")
     public int getDeptId() {
         return deptId;
@@ -52,7 +59,11 @@ public class Department implements Serializable {
         this.deptCode = deptCode;
     }
 
-    @OneToMany(mappedBy = "dept")
+    @OneToMany(mappedBy = "dept",fetch = FetchType.LAZY)
+    //@Fetch(FetchMode.JOIN)
+    //@Fetch(FetchMode.SELECT)
+    //@BatchSize(size = 2)
+    @Fetch(FetchMode.SUBSELECT)
     public Set<Employee> getEmployees() {
         return employees;
     }

@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -45,57 +45,59 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-//creating session object
+        //addDempartmentEmployee();
+        Session session = sessionFactory.openSession();
+//        List<Department> depts=session.createQuery("From Department").list();
+/*  for fetch statergy select and join testing
+        Department d=(Department)session.get(Department.class,2);
+        Set<Employee> sets=d.getEmployees();
+        for (Employee e:sets) {
+            System.out.println(e.getEmpId());
+        }
+*/
+/* for fetch statergy @batch-size(size=10)*/
+        List<Department> list = session.createQuery("from Department").list();
+
+        for(Department department : list){
+
+            Set employeeSet = department.getEmployees();
+
+            for (Iterator iter = employeeSet.iterator(); iter.hasNext(); ) {
+                Employee emp = (Employee) iter.next();
+                System.out.println(emp.getEmpId());
+                System.out.println(emp.getEmpName());
+            }
+        }
+
+
+
+        //  Department g=depts.get(1);
+        // g.getDept();
+        //    for(Department e:depts){
+        //  System.out.println("empId: "+e.getEmpId()+", empDemp: "+e.getDept().getDeptId());
+        //  }
+
+    }
+
+    private static void addDempartmentEmployee() {
+        //creating session object
         Session session = sessionFactory.openSession();
         //creating transaction object
         Transaction t = session.beginTransaction();
-        //App.insertData(0, "ravi");
-        //App.getUserData();
-        //    App.insertDepartmentData(2, "Adertisement","DADR");
-          App.getDepartmentData();
-
-
-
+        App.getDepartmentData();
         /* one to many */
         Department dept = new Department();
         dept.setDeptName("Reaserch and Development");
         dept.setDeptCode("DRD");
-
         //Save the Model object
         session.save(dept);
-
-
         Employee employee1 = new Employee("rajeshwar", "pune", dept);
-      //  Employee employee2 = new Employee("ravi", "pune", dept);
-     //   Employee employee3 = new Employee("shiva", "pune", dept);
         dept.getEmployees().add(employee1);
-        //Set<Employee> employees=new HashSet<>();
-        //employees.add(employee1);
-    //    employees.add(employee2);
-     //   employees.add(employee3);
-session.save(employee1);
-
-
-
-
-
-
-
-        // session.save(employee1);
-       // session.save(employee2);
-       // session.save(employee3);
-
+        session.save(employee1);
         //Commit transaction
         t.commit();
         session.close();
         System.out.println("successfully saved");
-
-
-
-
-
-
-
     }
 
     private static void getUserData() {
