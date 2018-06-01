@@ -1,13 +1,15 @@
 package com.kc.hib.entity;
 
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+
+
+
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+
 
 /**
  * Created by keshav.chaure on 5/31/2018.
@@ -24,6 +26,12 @@ public class Department implements Serializable {
 
     public Department() {
         System.out.println("dept loading..");
+    }
+
+    public Department(String deptName, String deptCode, Set<Employee> employees) {
+        this.deptName = deptName;
+        this.deptCode = deptCode;
+        this.employees = employees;
     }
 
     @Id
@@ -59,11 +67,14 @@ public class Department implements Serializable {
         this.deptCode = deptCode;
     }
 
-    @OneToMany(mappedBy = "dept",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dept", fetch = FetchType.LAZY )
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+
+
     //@Fetch(FetchMode.JOIN)
     //@Fetch(FetchMode.SELECT)
     //@BatchSize(size = 2)
-    @Fetch(FetchMode.SUBSELECT)
+    //@Fetch(FetchMode.SUBSELECT)
     public Set<Employee> getEmployees() {
         return employees;
     }

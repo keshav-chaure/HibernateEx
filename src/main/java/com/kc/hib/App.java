@@ -10,9 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Hello world!
@@ -48,15 +46,60 @@ public class App {
         //addDempartmentEmployee();
         Session session = sessionFactory.openSession();
 //        List<Department> depts=session.createQuery("From Department").list();
-/*  for fetch statergy select and join testing
-        Department d=(Department)session.get(Department.class,2);
-        Set<Employee> sets=d.getEmployees();
-        for (Employee e:sets) {
-            System.out.println(e.getEmpId());
+//        fetchSelectAndJoinTest();
+//        fetchBatchSizeTest();
+//        hqlFetchNPlusOneProbblem();
+//        criteriaNPlusOneProblem();
+         cascadeTypeTest();
+//        addDempartmentEmployee();
+
+
+        //  Department g=depts.get(1);
+        // g.getDept();
+        //    for(Department e:depts){
+        //  System.out.println("empId: "+e.getEmpId()+", empDemp: "+e.getDept().getDeptId());
+        //  }
+
+    }
+
+    private static void criteriaNPlusOneProblem() {
+    /* criteria to resolve n+1 probblem  */
+ /*       Criteria criteria = session.createCriteria(Employee.class);
+        criteria.setFetchMode("dept", FetchMode.EAGER);
+        List<Employee> list = criteria.list();
+        for (Employee e:list) {
+              System.out.println("empId: "+e.getEmpId()+", empDemp: "+e.getDept().getDeptId());
         }
 */
-/* for fetch statergy @batch-size(size=10)*/
-        List<Department> list = session.createQuery("from Department").list();
+    }
+
+    private static void hqlFetchNPlusOneProbblem() {
+    /* resolutin of N + 1 problem */
+        //  List<Department> list = session.createQuery("from Department").list();
+        // insted of above use below line of code
+        //1. using HQL fetch join
+/*
+
+        String hql = "from Department dept join fetch dept.employees emp";
+        Query query = session.createQuery(hql);
+        List<Department> results = query.list();
+        for(Department department : results){
+
+            Set employeeSet = department.getEmployees();
+
+            for (Iterator iter = employeeSet.iterator(); iter.hasNext(); ) {
+                Employee emp = (Employee) iter.next();
+                System.out.println(emp.getEmpId());
+                System.out.println(emp.getEmpName());
+            }
+        }
+
+*/
+    }
+
+    private static void fetchBatchSizeTest() {
+    /* for fetch statergy @batch-size(size=10)*/
+/*        List<Department> list = session.createQuery("from Department").list();
 
         for(Department department : list){
 
@@ -68,30 +111,63 @@ public class App {
                 System.out.println(emp.getEmpName());
             }
         }
-
-
-
-        //  Department g=depts.get(1);
-        // g.getDept();
-        //    for(Department e:depts){
-        //  System.out.println("empId: "+e.getEmpId()+", empDemp: "+e.getDept().getDeptId());
-        //  }
-
+*/
     }
 
+    private static void fetchSelectAndJoinTest() {
+    /*  for fetch statergy select and join testing
+            Department d=(Department)session.get(Department.class,2);
+            Set<Employee> sets=d.getEmployees();
+            for (Employee e:sets) {
+                System.out.println(e.getEmpId());
+            }
+    */
+    }
+    private  static void cascadeTypeTest(){
+        // in addDempartmentEmployee() method we have to store Department and Employee indivusually.
+        // With save-update cascade we dont need to save Employee as soon as we save Department , it will save employee also
+        //create session
+        Session session=sessionFactory.openSession();
+        //create transaction
+        Transaction txn=session.beginTransaction();
+
+        Department department=new Department();
+        Employee employee=new Employee();
+
+        department.setDeptName("Legal Department");
+        department.setDeptCode("DLEG");
+        employee.setDept(department);
+        employee.setEmpName("shyam");
+        employee.setEmpCity("basmat");
+
+
+        department.getEmployees().add(employee);
+
+        session.save(department);
+
+
+        txn.commit();
+        session.close();
+        System.out.println("successfully saved");
+
+
+
+
+
+    }
     private static void addDempartmentEmployee() {
         //creating session object
         Session session = sessionFactory.openSession();
         //creating transaction object
         Transaction t = session.beginTransaction();
-        App.getDepartmentData();
+        //App.getDepartmentData();
         /* one to many */
         Department dept = new Department();
-        dept.setDeptName("Reaserch and Development");
-        dept.setDeptCode("DRD");
+        dept.setDeptName("Test Department");
+        dept.setDeptCode("DTD");
         //Save the Model object
         session.save(dept);
-        Employee employee1 = new Employee("rajeshwar", "pune", dept);
+        Employee employee1 = new Employee("Swamikumar", "bnaglore", dept);
         dept.getEmployees().add(employee1);
         session.save(employee1);
         //Commit transaction
