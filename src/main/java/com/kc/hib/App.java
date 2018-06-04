@@ -2,6 +2,7 @@ package com.kc.hib;
 
 import com.kc.hib.entity.Department;
 import com.kc.hib.entity.Employee;
+import com.kc.hib.entity.MyObject;
 import com.kc.hib.entity.User;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -34,6 +35,7 @@ public class App {
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(com.kc.hib.entity.User.class)
                 .addAnnotatedClass(com.kc.hib.entity.Employee.class)
+                .addAnnotatedClass(com.kc.hib.entity.MyObject.class)
                 .addAnnotatedClass(com.kc.hib.entity.Department.class);
 
         builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
@@ -50,9 +52,9 @@ public class App {
 //        fetchBatchSizeTest();
 //        hqlFetchNPlusOneProbblem();
 //        criteriaNPlusOneProblem();
-         cascadeTypeTest();
+//         cascadeTypeTest();
 //        addDempartmentEmployee();
-
+          objectStateTest();
 
         //  Department g=depts.get(1);
         // g.getDept();
@@ -60,6 +62,29 @@ public class App {
         //  System.out.println("empId: "+e.getEmpId()+", empDemp: "+e.getDept().getDeptId());
         //  }
 
+    }
+
+    private static void objectStateTest() {
+        // tranciant state
+        MyObject obj=new MyObject();
+        obj.setName("Keshav's Table");
+
+        Session session = sessionFactory.openSession();
+        Transaction txn=session.getTransaction();
+        txn.begin();
+      //  session.save(obj);
+
+        session.save("some",obj);
+        // Object in persistance state
+
+        txn.commit();
+
+
+        // Object in detached state
+        System.out.println("saved myobject !" );
+
+        session.close();
+        System.out.println("saved myobject !"+obj.getName());
     }
 
     private static void criteriaNPlusOneProblem() {

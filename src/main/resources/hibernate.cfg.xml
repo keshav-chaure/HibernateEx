@@ -9,7 +9,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://keshav-mysql-db.c5coktr5xavm.ap-south-1.rds.amazonaws.com/keshav_db</property>
         <property name="hibernate.connection.username">keshav_mysql_db</property>
-        <property name="hibernate.connection.password">keshav_mysql_db</property>
+        <property name="hibernate.connection.password">**********</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
         <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>

@@ -19,3 +19,9 @@ CREATE  TABLE `keshav_db`.`Department` (
       ON DELETE NO ACTION
       ON UPDATE NO ACTION);
 
+      CREATE  TABLE `keshav_db`.`my_table` (
+        `my_table_id` INT NOT NULL AUTO_INCREMENT ,
+        `my_table_name` VARCHAR(45) NULL ,
+        PRIMARY KEY (`my_table_id`) );
+
+
